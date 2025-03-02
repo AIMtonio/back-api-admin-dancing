@@ -2,20 +2,24 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private _configService: ConfigService,
+  ) {}
 
   @Post('login')
   async login(@Body() createUserDto: CreateUsuarioDto) {
 
-    /*const userExist = await this.usuarioService.findByEmailAndPassword(createUserDto.email, createUserDto.password);
+    const userExist = await this.usuarioService.findByEmailAndPassword(createUserDto.email, createUserDto.password);
     if (!userExist) {
       return 'Invalid credentials';
-    }*/
-    const token = await this.usuarioService.generateJwt(createUserDto);
-    // return { user: userExist, access_token: token, token_type: "bearer" };
+    }
+
+    const token = await this.usuarioService.generateJwt(userExist);
     return { access_token: token, token_type: "bearer" };
   }
 

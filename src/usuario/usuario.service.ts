@@ -16,7 +16,7 @@ export class UsuarioService {
   ) {}
 
   async generateJwt(usuario: CreateUsuarioDto) {
-    const payload = { username: 'hola', sub: 'mundo' };
+    const payload = { username: usuario.username, sub: usuario.uuid };
     return this._jwtService.sign(payload);
   }
 
@@ -69,4 +69,9 @@ export class UsuarioService {
   async findByEmail(email: string) {
     return await this._usuarioRepository.findOne({ where: { email: email } });
   }
+
+  async findByEmailAndPassword(email: string, password: string) {
+    return await this._usuarioRepository.findOne({ where: { email: email, password: password, status: 1 } });
+  }
+
 }

@@ -1,30 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { RolModule } from './rol/rol.module';
-import { AlumnoModule } from './alumno/alumno.module';
-import { MaestroModule } from './maestro/maestro.module';
-import { ClaseModule } from './clase/clase.module';
-import { PagoModule } from './pago/pago.module';
-import { UsuarioModule } from './usuario/usuario.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
-// import { Auth } from './auth/entities/auth.entity';
 import { HelpersModule } from './helpers/helpers.module';
 import { ClientModule } from './client/client.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
-  imports: [RolModule, AlumnoModule, MaestroModule, ClaseModule, PagoModule, UsuarioModule, AuthModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'admin_dancing',
-      entities: ["dist/**/*.entity{.ts,.js}"],
-      synchronize: true,
+  imports: [
+    UsuarioModule, AuthModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('DB_HOST'),
+        port: 3306,
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASS'),
+        database: configService.get<string>('DB_NAME'),
+        entities: ["dist/**/*.entity{.ts,.js}"],
+        synchronize: true,
+      }),
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
@@ -33,6 +33,7 @@ import { ClientModule } from './client/client.module';
     AuthModule,
     HelpersModule,
     ClientModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [AppService],
