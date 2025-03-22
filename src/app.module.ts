@@ -6,6 +6,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClienteModule } from './cliente/cliente.module';
+import { HelpersModule } from './helpers/helpers.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ClienteModule } from './cliente/cliente.module';
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     ClienteModule,
+    HelpersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

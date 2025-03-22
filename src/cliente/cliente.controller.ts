@@ -8,8 +8,8 @@ export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
 
   @Post()
-  create(@Body() createClienteDto: CreateClienteDto) {
-    return this.clienteService.create(createClienteDto);
+  async create(@Body() createClienteDto: CreateClienteDto) {
+    return await this.clienteService.create(createClienteDto);
   }
 
   @Get()
