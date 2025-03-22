@@ -12,7 +12,7 @@ export class UsuarioService {
   constructor(
     @InjectRepository(User)
     private _usuarioRepository: Repository<User>,
-    private readonly _jwtService: JwtService
+    private readonly _jwtService: JwtService,
   ) {}
 
   async generateJwt(usuario: CreateUsuarioDto) {

@@ -5,13 +5,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { HelpersModule } from './helpers/helpers.module';
-import { ClientModule } from './client/client.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
-    UsuarioModule, AuthModule,
+    UsuarioModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -30,9 +29,6 @@ import { AppService } from './app.service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    AuthModule,
-    HelpersModule,
-    ClientModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
